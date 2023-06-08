@@ -1,19 +1,25 @@
 import styles from "./styles.module.css"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 import Users from "./Users"
+
+
+import { useNavigate  } from "react-router-dom";
+
+
 const Main = () => {
-    const [dane, ustawDane] = useState([])
-    const [usersVisible, setUsersVisible] = useState(false)
-    const [detailsVisible, setDetailsVisible] = useState(false)
-    const [details, setUserDetails] = useState({});
+  const [dane, ustawDane] = useState([]);
+  const [usersVisible, setUsersVisible] = useState(true);
+  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [details, setUserDetails] = useState({});
+  const [recipientId, setRecipientId] = useState("");
+  const [messageContent, setMessageContent] = useState("");
+  const [sendMessageResponse, setSendMessageResponse] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const navigate = useNavigate();
+ 
 
-
-
-
-    const [recipientId, setRecipientId] = useState("");
-    const [messageContent, setMessageContent] = useState("");
-    const [sendMessageResponse, setSendMessageResponse] = useState("");
 
     const handleSendMessage = async (e) => {
       e.preventDefault();
@@ -50,7 +56,10 @@ const Main = () => {
       }
     };
 
-    
+    const handleSelectUser = (user) => {
+      setSelectedUser(user);
+      navigate(`/messages/user/${user._id}`);
+    };   
 
     const handleLogout = () => {
         localStorage.removeItem("token")
@@ -79,6 +88,12 @@ const Main = () => {
                 ustawDane(res.data) // `res.data` - zawiera sparsowane dane – listę
                 setUsersVisible(true)
                 setResponseMessageU(res.message);
+
+                console.log(res.data); // Wyświetl dane w konsoli
+                ustawDane(res.data);
+                setUsersVisible(true);
+                setResponseMessageU(res.message);
+
             } catch (error) {
                 if (error.response && error.response.status >= 400 && error.response.status <= 500) {
                     localStorage.removeItem("token")
@@ -146,43 +161,70 @@ const Main = () => {
         }
       };
       
-    return (
+      const handleGetMessages = async () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const config = {
+              method: "get",
+              url: "http://localhost:8080/api/messages",
+              headers: { "Content-Type": "application/json", "x-access-token": token },
+            };
+            const { data: res } = await axios(config);
+            setMessages(res.data);
+          } catch (error) {
+            if (
+              error.response &&
+              error.response.status >= 400 &&
+              error.response.status <= 500
+            ) {
+              localStorage.removeItem("token");
+              window.location.reload();
+            }
+          }
+        }
+      };
 
+      useEffect(() => {
+        handleGetMessages();
+      }, []);
+
+
+      return (
         <div className={styles.main_container}>
-            <nav className={styles.navbar}>
-                <h1>MySite</h1>
-                <button className={styles.white_btn} onClick={handleGetUsers}>
-                    Users
-                </button>
-                <button className={styles.white_btn} onClick={handleAccountDetails}>
-                    Details
-                </button>
-                <button className={styles.white_btn} onClick={handleDeleteAccount}>
-                    Delete account
-                </button>
-                <button className={styles.white_btn} onClick={handleLogout}>
-                    Logout
-                </button>
-            </nav>
-            <div style={{ display: detailsVisible ? 'block' : 'none' }}>
+          <nav className={styles.navbar}>
+            <h1>MySite</h1>
+            <button className={styles.white_btn} onClick={handleGetUsers}>
+              Users
+            </button>
+            <button className={styles.white_btn} onClick={handleAccountDetails}>
+              Details
+            </button>
+            <button className={styles.white_btn} onClick={handleDeleteAccount}>
+              Delete account
+            </button>
+            <button className={styles.white_btn} onClick={handleLogout}>
+              Logout
+            </button>
+          </nav>
+      
+          <div style={{ display: detailsVisible ? "block" : "none" }}>
             <h2>{responseMessageD}</h2>
-        <p>First Name: {details.firstName}</p>
-        <p>Last Name: {details.lastName}</p>
-        <p>Email: {details.email}</p>
-            </div>
-            <div style={{ display: usersVisible ? 'block' : 'none' }}>
-                <h2>{responseMessageU}</h2>
-                {dane.length > 0 ? <Users users={dane} /> : <p></p>}
-            </div>
-       
-
-
-
-
-
-
-
-<div>
+            <p>First Name: {details.firstName}</p>
+            <p>Last Name: {details.lastName}</p>
+            <p>Email: {details.email}</p>
+          </div>
+      
+          <div style={{ display: usersVisible ? "block" : "none" }}>
+            <h2>{responseMessageU}</h2>
+            {dane.length > 0 ? (
+              <Users users={dane} onSelectUser={handleSelectUser} />
+            ) : (
+              <p>No users found.</p>
+            )}
+          </div>
+      
+          <div>
   <h2>Send Message</h2>
   <form onSubmit={handleSendMessage}>
     <div>
@@ -206,15 +248,21 @@ const Main = () => {
   </form>
   <p>{sendMessageResponse}</p>
 </div>
-</div>
-
-
-
-
-
-
-
-
-    )
+<div>
+        <h2>My Messages</h2>
+        <ul>
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <li key={message.id}>{message.content}</li>
+            ))
+          ) : (
+            <p>No messages.</p>
+          )}
+        </ul>
+      </div>
+      </div>
+      );
+      
+      
 }
 export default Main

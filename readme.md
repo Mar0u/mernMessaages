@@ -10,10 +10,12 @@ http://localhost:8080
 
 #in 'mern' folder:
 npx create-react-app client
+npm install react-router-dom@latest
 
 
 #in client folder:
 npm install axios react-router-dom --save
+npm install react-router-dom@latest
 
 npm start
 

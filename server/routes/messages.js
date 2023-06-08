@@ -22,6 +22,32 @@ router.get("/", tokenVerification, async (req, res) => {
   }
 });
 
+
+router.get("/user/:userId", tokenVerification, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const loggedInUserId = req.user._id;
+
+    // Pobierz wszystkie wiadomości, w których użytkownik jest nadawcą lub odbiorcą
+    const messages = await Message.find({
+      $or: [
+        { sender: loggedInUserId, recipient: userId },
+        { sender: userId, recipient: loggedInUserId },
+      ],
+    })
+      .populate("sender", "firstName lastName")
+      .populate("recipient", "firstName lastName")
+      .sort({ timestamp: -1 });
+
+    res.status(200).send({ data: messages, message: "User messages:" });
+  } catch (error) {
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+
+
+
 // Wyślij nową wiadomość do użytkownika o danym ID
 router.post("/:recipientId", tokenVerification, async (req, res) => {
   try {

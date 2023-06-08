@@ -29,7 +29,7 @@ app.use("/api/messages", tokenVerification, messagesRoutes); // Dodana trasa dla
 //trasy wymagające weryfikacji tokenem:
 app.get("/api/users/", tokenVerification)
 app.use("/api/users/", tokenVerification, userRoutes);
-
+app.get("/api/messages", tokenVerification, messagesRoutes);
 //POTEM trasy nie wymagające tokena (kolejnośd jest istotna!)
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes) //tylko metoda get wymaga tokena

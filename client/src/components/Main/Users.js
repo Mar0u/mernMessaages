@@ -1,7 +1,15 @@
-import User from "./User"
-function Users(props) {
-const users = props.users;
-return (
-<ul> {users.map((user) => <User key={user._id} value={user._id} user={user}/> )} </ul> );
-}
-export default Users
+import React from "react";
+
+const Users = ({ users, onSelectUser }) => {
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user._id} onClick={() => onSelectUser(user)}>
+          {user.firstName} {user.lastName}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default Users;

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Mar0u/mern/issues"
   },
-  "homepage": "https://github.com/Mar0u/mern#readme"
+  "homepage": "https://github.com/Mar0u/mern#readme",
+  "dependencies": {
+    "react-router-dom": "^6.12.0"
+  }
 }
