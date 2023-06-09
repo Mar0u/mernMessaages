@@ -27,6 +27,7 @@ router.get("/", async (req, res) => {
             const users = await User.find();
             //konfiguracja odpowiedzi res z przekazaniem listy użytkowników:
             res.status(200).send({ data: users, message: "Lista użytkowników" });
+            
         })
         .catch(error => {
             res.status(500).send({ message: error.message });

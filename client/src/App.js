@@ -1,18 +1,34 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Main from "./components/Main";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import UserMessages from "./components/UserMessages";
 
 function App() {
-  const user = localStorage.getItem("token");
+  const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    return token ? true : false;
+  };
+
   return (
     <Routes>
-      {user && <Route path="/" exact element={<Main />} />}
-      <Route path="/signup" exact element={<Signup />} />
-      <Route path="/login" exact element={<Login />} />
-      <Route path="/" element={<Navigate replace to="/login" />} />
-      <Route path="/messages/user/:userId" element={<UserMessages />} />
+      <Route
+        path="/signup"
+        element={isAuthenticated() ? <Navigate to="/" replace /> : <Signup />}
+      />
+      <Route
+        path="/login"
+        element={isAuthenticated() ? <Navigate to="/" replace /> : <Login />}
+      />
+      <Route
+        path="/"
+        element={isAuthenticated() ? <Main /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/messages/user/:userId"
+        element={isAuthenticated() ? <UserMessages /> : <Navigate to="/login" replace />}
+      />
+      <Route path="/*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

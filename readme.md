@@ -16,6 +16,12 @@ npm install react-router-dom@latest
 #in client folder:
 npm install axios react-router-dom --save
 npm install react-router-dom@latest
+npm install react-router-dom
+npm install @fortawesome/fontawesome-free
+npm install gsap
+npm install --save react-particle-effect-button
+npm install react-spring
+npm install react-spring-once
 
 npm start
 

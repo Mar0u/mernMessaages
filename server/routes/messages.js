@@ -70,9 +70,9 @@ router.post("/:recipientId", tokenVerification, async (req, res) => {
 
     await message.save();
 
-    res.status(200).send({ message: "Message sent successfully" });
+    res.status(200).send({ message: 0 });
   } catch (error) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: 1 });
   }
 });
 
