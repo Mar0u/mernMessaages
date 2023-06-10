@@ -7,6 +7,8 @@ const Users = ({ users, onSelectUser, searchTerm }) => {
     return fullName.includes(searchTerm.toLowerCase());
   });
 
+  const defaultAvatarUrl = "https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg";
+
   return (
     <div>
       {filteredUsers.map((user) => (
@@ -18,13 +20,12 @@ const Users = ({ users, onSelectUser, searchTerm }) => {
           <div
             className={styles.photo}
             style={{
-              backgroundImage:
-                "url(https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg)",
+              backgroundImage: `url(${user.avatar || defaultAvatarUrl})`,
             }}
           ></div>
           <div className={styles["desccontact"]}>
             <p className={styles.name}>
-              {user.firstName}
+              {user.firstName} {user.lastName} 
             </p>
           </div>
         </div>

@@ -4,9 +4,10 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import Users from "./Users"
+import Menu from '../common/Menu';
 import { useSpring, animated } from "react-spring";
 import { useTransition } from 'react-spring';
-
+import { Link } from 'react-router-dom';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -188,9 +189,51 @@ const Messages = () => {
   };
 
 
+const [editEmailOpen, setEditEmailOpen] = useState(false);
+const [email, setEmail] = useState("");
+
+const handleEditEmail = () => {
+  setEditEmailOpen(!editEmailOpen);
+};
+
+const handleSaveEmail = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const config = {
+        method: "put",
+        url: "http://localhost:8080/api/users/email",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+        data: {
+          email: email,
+        },
+      };
+
+      await axios(config);
+      // Zaktualizuj stan z danymi użytkownika
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        email: email,
+      }));
+    }
+  } catch (error) {
+    // Obsłuż błędy żądania
+    console.error(error);
+  }
+
+  // Zamknij formularz do zmiany adresu e-mail
+  setEditEmailOpen(false);
+};
+
+
+
 
   useEffect(() => {
     getUsers();
+    handleAccountDetails();
     const fetchUserMessages = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -296,50 +339,60 @@ const Messages = () => {
 
   const [initialLoad, setInitialLoad] = useState(true);
 
-  // ...
+  // todo jak przechodze do uzytkownika o id ktore nie istnieje to wylogowuje a powinno isc do Main
   
   useEffect(() => {
     setInitialLoad(false);
   }, []);
 
-  const findUserData = (userId) => {
-  
-  
-const selectedU = dane.find((user) => String(user._id) === String(userId));
+  const defaultAvatarUrl = "https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg";
 
-    
+
+  const findUserData = (userId) => {
+    const selectedU = dane.find((user) => String(user._id) === String(userId));
+  
     if (selectedU && selectedU.firstName) {
-      return <p className={styles.name}>User Messages sent to {selectedU.firstName} {selectedU.lastName}</p>;
+      return (
+     
+        <div className={styles.userInfo}>
+  <div className={styles.photoContainer}>
+    <img
+      className={styles.photoIMG}
+      src={selectedU.avatar || defaultAvatarUrl}
+      alt="Avatar"
+    />
+  </div>
+  <div className={styles.textContainer}>
+    <p className={styles.name}>
+      {selectedU.firstName} {selectedU.lastName}
+    </p>
+  </div>
+</div>
+
+   
+      );
     } else {
       return <p className={styles.name}>User not found or not available</p>;
     }
   };
+  
+  
+
   
   return (
 
 
     <div className={styles.main_container}>
              <div className={styles.container}>
-      <nav className={styles.navbar}>
-        <h1>MySite</h1>
-        <button className={styles.white_btn} onClick={handleAccountDetails}>
-          Details
-        </button>
-        <button className={styles.white_btn} onClick={handleDeleteAccount}>
-          Delete account
-        </button>
-        <button className={styles.white_btn} onClick={handleLogout}>
-          Logout
-        </button>
-      </nav>
+             <Link to="/" style={{ textDecoration: 'none' }}>
+          <nav className={styles.navbar}>
+            <h1>MySite</h1>
+            <div className={styles.avatarNav} style={{ backgroundImage: `url(${details.avatar || defaultAvatarUrl})` }}>
+            </div>
+          </nav>
+        </Link>
 
-      <div style={{ display: detailsVisible ? "block" : "none" }}>
-        <h2>{responseMessageD}</h2>
-        <p>First Name: {details.firstName}</p>
-        <p>Last Name: {details.lastName}</p>
-        <p>Email: {details.email}</p>
-      </div>
-
+  
       <section className={styles.discussions}>
 
         <div className={`${styles.discussion} ${styles.search}`}>
@@ -359,11 +412,7 @@ const selectedU = dane.find((user) => String(user._id) === String(userId));
       </section>
 
 
-
-
-
-
-
+{/* <Menu  /> */}
 
 
       

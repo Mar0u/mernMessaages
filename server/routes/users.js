@@ -49,4 +49,67 @@ router.delete("/", tokenVerification, async (req, res) => {
     }
   });
   
+
+  router.put("/avatar", tokenVerification, async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const avatarLink = req.body.avatarLink;
+  
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        console.log("User not found");
+        return res.status(404).send({ message: "User not found" });
+      }
+  
+      console.log("Before update - Old Avatar Link:", user.avatar);
+  
+      user.avatar = avatarLink;
+      await user.save();
+  
+      console.log("After update - New Avatar Link:", user.avatar);
+  
+      res.status(200).send({ message: "Avatar updated successfully" });
+    } catch (error) {
+      console.log("Error updating avatar:", error);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
+  });
+  
+
+
+
+  router.put("/email", tokenVerification, async (req, res) => {
+    console.log("aaa");
+    try {
+      const userId = req.user._id;
+      const newEmail = req.body.email;
+  
+      // Sprawdź, czy podany adres e-mail jest unikalny
+      const existingUser = await User.findOne({ email: newEmail });
+      if (existingUser) {
+        return res.status(409).send({ message: "Email already exists" });
+      }
+  
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        console.log("User not found");
+        return res.status(404).send({ message: "User not found" });
+      }
+  
+      console.log("Before update - Old Email:", user.email);
+  
+      user.email = newEmail;
+      await user.save();
+  
+      console.log("After update - New Email:", user.email);
+  
+      res.status(200).send({ message: "Email updated successfully" });
+    } catch (error) {
+      console.log("Error updating email:", error);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
+  });
+
 module.exports = router
