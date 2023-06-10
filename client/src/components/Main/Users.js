@@ -24,7 +24,7 @@ const Users = ({ users, onSelectUser, searchTerm }) => {
           ></div>
           <div className={styles["desccontact"]}>
             <p className={styles.name}>
-              {user.firstName} {user.hasUnreadMessage}
+              {user.firstName}
             </p>
           </div>
         </div>

@@ -302,6 +302,19 @@ const Messages = () => {
     setInitialLoad(false);
   }, []);
 
+  const findUserData = (userId) => {
+  
+  
+const selectedU = dane.find((user) => String(user._id) === String(userId));
+
+    
+    if (selectedU && selectedU.firstName) {
+      return <p className={styles.name}>User Messages sent to {selectedU.firstName} {selectedU.lastName}</p>;
+    } else {
+      return <p className={styles.name}>User not found or not available</p>;
+    }
+  };
+  
   return (
 
 
@@ -359,7 +372,7 @@ const Messages = () => {
 
       <section className={styles.chat}>
         <div className={styles.headerchat}>
-          <p className={styles.name}> User Messages send to {userId}</p>
+          {findUserData(userId)}
         </div>
       <div className={styles.messageschat}>
   {/* {messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)).map((message) => (
@@ -370,7 +383,8 @@ const Messages = () => {
       </div>
     </div>
   ))} */}
-{/* todo poprawic sortowanie zeby bylo tak jak wyzej od najnowszych na dole, ale wtedy trzeba tez scroll zmieniac */}
+{/* todo poprawic sortowanie zeby bylo tak jak wyzej od najnowszych na dole, ale wtedy trzeba tez scroll zmieniac 
+i zeby sie zamiast _id bylo username*/}
 
 {messages.map((message) => (
   <div key={message._id} className={styles.message}>
