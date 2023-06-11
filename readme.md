@@ -1,3 +1,17 @@
+emails: firstnamelastname + example.com
+passwords: firstnamelastname + 123!A
+
+jamesanderson@example.com
+jamesanderson123!A
+
+
+
+
+// todo jak przechodze do uzytkownika o id ktore nie istnieje to wylogowuje a powinno isc do Main
+  //todo jak sie nacisnie enter zeby animowal sie send
+
+
+
 #in server folder:
 npm install express dotenv mongoose nodemon cors --save
 npm install jsonwebtoken joi joi-password-complexity --save

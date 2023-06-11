@@ -1,4 +1,6 @@
 import { useState } from "react"
+import React, { useEffect } from 'react';
+
 import axios from "axios"
 import { Link } from "react-router-dom"
 import styles from "./styles.module.css"
@@ -22,9 +24,29 @@ const Login = () => {
                 error.response.status <= 500
             ) {
                 setError(error.response.data.message)
+                setSnackbarText(error.response.data.message)
+                setSnackbarText("")
             }
         }
     }
+
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const handleShowSnackbar = (text) => {
+        setSnackbarText(text);
+        setShowSnackbar(true);
+        setTimeout(() => {
+            setShowSnackbar(false);
+            setSnackbarText("")
+        }, 3000);
+    };
+
+    const [snackbarText, setSnackbarText] = useState(null);
+
+    useEffect(() => {
+        if (snackbarText) {
+            handleShowSnackbar(snackbarText);
+        }
+    }, [snackbarText]);
     return (
         <div className={styles.login_container}>
             <div className={styles.login_form_container}>
@@ -50,11 +72,20 @@ const Login = () => {
                             required
                             className={styles.input}
                         />
-                        {error && <div
-                            className={styles.error_msg}>{error}</div>}
-                        <button type="submit"
-                            className={styles.green_btn}>
-                            Sing In
+
+                        {/* {error && <div
+                            className={styles.error_msg}>{error}</div>} */}
+                        {/* <button type="submit"
+                             className={`${styles.green_btn} ${styles.rainbow}`}>
+                            Sign In
+                        </button> */}
+
+                        <button type="submit" className={styles.cta}>
+                            <span>Sign In</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
                         </button>
                     </form>
                 </div>
@@ -63,10 +94,15 @@ const Login = () => {
                     <Link to="/signup">
                         <button type="button"
                             className={styles.white_btn}>
-                            Sing Up
+                            Sign Up
                         </button>
                     </Link>
                 </div>
+            </div>
+            <div>
+                {showSnackbar && (
+                    <div className={styles.snackbarshow}>{snackbarText}</div>
+                )}
             </div>
         </div>
     )

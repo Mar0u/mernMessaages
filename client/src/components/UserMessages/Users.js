@@ -7,7 +7,7 @@ const Users = ({ users, onSelectUser, searchTerm }) => {
     return fullName.includes(searchTerm.toLowerCase());
   });
 
-  const defaultAvatarUrl = "https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg";
+  const defaultAvatarUrl = "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg";
 
   return (
     <div>
@@ -25,7 +25,7 @@ const Users = ({ users, onSelectUser, searchTerm }) => {
           ></div>
           <div className={styles["desccontact"]}>
             <p className={styles.name}>
-              {user.firstName} {user.lastName} 
+              {user.firstName} {user.lastName}
             </p>
           </div>
         </div>
