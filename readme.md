@@ -39,7 +39,7 @@ npm install react-spring-once
 
 npm start
 
-http://localhost:
+http://localhost:3000
 
 to use atlas mongo online:
 in .env: DB=mongodb+srv://<.......>:<password>@cluster0.rn233iu.mongodb.net/?retryWrites=true&w=majority
